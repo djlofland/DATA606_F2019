@@ -12,6 +12,8 @@ output:
     toc_float: true
 ---
 
+Source files: [https://github.com/djlofland/DATA606_F2019/tree/master/Lab2]
+
 Some define Statistics as the field that focuses on turning information into
 knowledge.  The first step in that process is to summarize and describe the raw
 information - the data.  In this lab, you will gain insight into public health

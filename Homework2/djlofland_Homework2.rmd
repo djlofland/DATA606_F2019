@@ -20,6 +20,8 @@ editor_options:
 knitr::opts_chunk$set(echo = TRUE)
 ```
 
+Source files: [https://github.com/djlofland/DATA606_F2019/tree/master/Homework2]
+
 ```{r}
 library(formattable)
 ```

@@ -1,0 +1,10 @@
+name: Publish Document
+title:
+username:
+account: rpubs
+server: rpubs.com
+hostUrl: rpubs.com
+appId: https://api.rpubs.com/api/v1/document/525921/81f78d271b48495d86c2416de913b18b
+bundleId: https://api.rpubs.com/api/v1/document/525921/81f78d271b48495d86c2416de913b18b
+url: http://rpubs.com/djlofland/525921
+when: 1567890931.81735
