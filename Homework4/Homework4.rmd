@@ -1,0 +1,381 @@
+---
+title: "DATA 606 Homework 4"
+subtitle: "(Chapter 4 - Distributions of Random Variables)"
+author: 'Donny Lofland'
+date: '9/17/2019'
+output:
+  html_document:
+    theme: cerulean
+    highlight: pygments
+    css: ./lab.css
+    toc: true
+    toc_float: true
+  pdf_document:
+      extra_dependencies: ["geometry", "multicol", "multirow"]
+editor_options: 
+  chunk_output_type: console
+bibliography: references.bib
+link-citations: yes
+---
+
+## Homework Setup
+
+Source files: [https://github.com/djlofland/DATA606_F2019/tree/master/Homework4](https://github.com/djlofland/DATA606_F2019/tree/master/Homework4)
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+```{r}
+library(ggplot2)
+```
+
+## Exercises
+
+### (Area under Curve)
+
+**Area under the curve, Part I**. (4.1, p. 142) What percent of a standard normal distribution $N(\mu=0, \sigma=1)$ is found in each region? Be sure to draw a graph.
+
+#### 1
+
+(a) $Z < -1.35$
+
+#### 2
+
+(b) $Z > 1.48$
+
+#### 3
+
+(c) $-0.4 < Z < 1.5$
+
+#### 4
+
+(d) $|Z| > 2$
+
+```{r}
+# Exercise 1
+paste('Exercise 1: ', pnorm(-1.35))
+ggplot(NULL, aes(c(-5,5))) +
+  geom_area(stat = "function", fun = dnorm, fill = "#00998a", xlim = c(-5, -1.35)) +
+  geom_area(stat = "function", fun = dnorm, fill = "grey80", xlim = c(-1.35, 5)) +
+  labs(x = "z", y = "", title="Z < -1.35") +
+  scale_y_continuous(breaks = NULL) +
+  scale_x_continuous(breaks = 1)
+
+# Exercise 2
+paste('Exercise 2', 1 - pnorm(1.48))
+ggplot(NULL, aes(c(-5,5))) +
+  geom_area(stat = "function", fun = dnorm, fill = "grey80", xlim = c(-5, 1.48)) +
+  geom_area(stat = "function", fun = dnorm, fill = "#00998a", xlim = c(1.48, 5)) +
+  labs(x = "z", y = "", title="Z > 1.48") +
+  scale_y_continuous(breaks = NULL) +
+  scale_x_continuous(breaks = 1)
+
+# Exercise 3
+paste('Exercise 3', pnorm(1.5) - pnorm(-0.4)) 
+ggplot(NULL, aes(c(-5,5))) +
+  geom_area(stat = "function", fun = dnorm, fill = "grey80", xlim = c(-5, -0.4)) +
+  geom_area(stat = "function", fun = dnorm, fill = "#00998a", xlim = c(-0.4, 1.5)) +
+  geom_area(stat = "function", fun = dnorm, fill = "grey80", xlim = c(1.5, 5)) +
+  labs(x = "z", y = "", title="-0.4 < Z < 1.5") +
+  scale_y_continuous(breaks = NULL) +
+  scale_x_continuous(breaks = 1)
+
+# Exercise 4
+paste('Exercise 4', pnorm(-2) + (1 - pnorm(2)))
+ggplot(NULL, aes(c(-5,5))) +
+  geom_area(stat = "function", fun = dnorm, fill = "#00998a", xlim = c(-5, -2)) +
+  geom_area(stat = "function", fun = dnorm, fill = "#00998a", xlim = c(2, 5)) +
+  labs(x = "z", y = "", title="|Z| > 2") +
+  scale_y_continuous(breaks = NULL) +
+  scale_x_continuous(breaks = 1)
+
+```
+
+--------------------------------------------------------------------------------
+
+\clearpage
+
+### (Triathalon)
+
+**Triathlon times, Part I** (4.4, p. 142) In triathlons, it is common for racers to be placed into age and gender groups. Friends Leo and Mary both completed the Hermosa Beach Triathlon, where Leo competed in the *Men, Ages 30 - 34* group while Mary competed in the *Women, Ages 25 - 29* group. Leo completed the race in 1:22:28 (4948 seconds), while Mary completed the race in 1:31:53 (5513 seconds). Obviously Leo finished faster, but they are curious about how they did within their respective groups. Can you help them? Here is some information on the performance of their groups:
+
+* The finishing times of the \textit{Men, Ages 30 - 34} group has a mean of 4313 seconds with a standard deviation of 583 seconds.
+* The finishing times of the \textit{Women, Ages 25 - 29} group has a mean of 5261 seconds with a standard deviation of 807 seconds.
+* The distributions of finishing times for both groups are approximately Normal.
+
+Remember: a better performance corresponds to a faster finish.
+
+#### 5
+
+(a) Write down the short-hand for these two normal distributions.
+
+$$mens: N(\mu=4313, \sigma=583)\quad womens:N(\mu=5261, \sigma=807)$$
+
+#### 6
+
+(b) What are the Z-scores for Leo's and Mary's finishing times? What do these Z-scores tell you?
+
+```{r}
+(leo_z <- (4948-4313) / 583)
+(mary_z <- (5513 - 5261) / 807)
+```
+
+> Within his group, Leo was over 1 SD above mean which means he took longer than the mean for his group and was in the bottom ~32% of his group.  Higher times, means longer run and worse performance.  While Mary took longer to run, (5261 vs 4313), compared with her group, she performed closer to mean.  She was still behind the pack, but not as bad as Leo compared with his group.
+
+#### 7
+
+(c) Did Leo or Mary rank better in their respective groups? Explain your reasoning.
+
+> This depending on how we define "ranking".  If its an absolute, then we don't know ... it depend on group sizes.  If there were 10 people in Leo's group, his absolute ranking will be higher than Mark's even though he performed worse relative to his group.  If it's a relative % ranking, then Mark will have ranked higher since she was closer to mean with a larger percentage of athletes behind her compared with Leo. 
+
+#### 8
+
+(d) What percent of the triathletes did Leo finish faster than in his group?
+
+```{r}
+1 - pnorm(1.08)
+```
+
+> Leo finished faster than 14% of his group while 86% of his group was ahead of him.
+
+#### 9
+
+(e) What percent of the triathletes did Mary finish faster than in her group?
+
+```{r}
+1 - pnorm(0.3122677)
+```
+
+> Mary finished faster than 37.7% of her group while 62.3% finished ahead of her.
+
+#### 10
+
+(f) If the distributions of finishing times are not nearly normal, would your answers to parts (b) - (e) change? Explain your reasoning.
+
+> The z-scores are still valid within group for non-normal distribution; however, as the distributions skew, so will the z-score distribution.  As such, the portions of athletes in front and behind won't be the same as normal since outliers drag the mean their direction, ie fewer athletes in the tail group than expecte.  That said, z-score is tolerant to an extent within group.  Comparision across groups will become problematic as the z-score distributions deviate from each other.  Since Leo and Mary's performance was not very close, I suspect it would take a fair bit of skew before we'd question performance against each other.  If their z-scores were close, then the distribution skew might matter.
+
+
+--------------------------------------------------------------------------------
+
+\clearpage
+
+### (Female Heights)
+
+**Heights of female college students** Below are heights of 25 female college students.
+
+\[ \stackrel{1}{54}, \stackrel{2}{55}, \stackrel{3}{56}, \stackrel{4}{56}, 
+\stackrel{5}{57}, \stackrel{6}{58}, \stackrel{7}{58}, \stackrel{8}{59}, 
+\stackrel{9}{60}, \stackrel{10}{60}, \stackrel{11}{60}, \stackrel{12}{61}, 
+\stackrel{13}{61}, \stackrel{14}{62}, \stackrel{15}{62}, \stackrel{16}{63}, 
+\stackrel{17}{63}, \stackrel{18}{63}, \stackrel{19}{64}, \stackrel{20}{65}, 
+\stackrel{21}{65}, \stackrel{22}{67}, \stackrel{23}{67}, \stackrel{24}{69}, 
+\stackrel{25}{73} \]
+
+#### 11
+
+(a) The mean height is 61.52 inches with a standard deviation of 4.58 inches. Use this information to determine if the heights approximately follow the 68-95-99.7% Rule.
+
+```{r}
+heights <- c(54, 55, 56,56,57,58,58,59,60,60,60,61,61,62,62,63,63,63,64,65,65,67,67,69,73)
+(mu <- mean(heights))
+(sigma <- sd(heights))
+
+# Percent Between (1)SD and (-1)SD ... compare with ~68%
+pnorm(mu+sigma, mean=mu, sd=sigma) - pnorm(mu-sigma, mean=mu, sd=sigma)
+
+# Percent Between (2)SD and (-2)SD ... compare with ~65%
+pnorm(mu+2*sigma, mean=mu, sd=sigma) - pnorm(mu-2*sigma, mean=mu, sd=sigma)
+
+# Percent Between (3)SD and (-3)SD ... compare with ~99.7%
+pnorm(mu+3*sigma, mean=mu, sd=sigma) - pnorm(mu-3*sigma, mean=mu, sd=sigma)
+```
+
+> The 68%, 95% and 97.5% Rule holds up quite well for this group of students.
+
+#### 12
+
+(b) Do these data appear to follow a normal distribution? Explain your reasoning using the graphs provided below.
+
+```{r, echo=FALSE, message=FALSE, warning=FALSE, fig.show="hold", out.width="50%", fig.height=3}
+library(openintro)
+heights <- c(54, 55, 56, 56, 57, 58, 58, 59, 60, 60, 60, 61, 
+            61, 62, 62, 63, 63, 63, 64, 65, 65, 67, 67, 69, 73)
+par(mar=c(3.7,2.2,1,1), las=1, mgp=c(2.5,0.7,0), mfrow = c(1,1), cex.lab = 1.5, cex.axis = 1.5)
+histPlot(heights, col = COL[1], xlab = "Heights", ylab = "", probability = TRUE, axes = FALSE, ylim = c(0,0.085))
+axis(1)
+x <- heights
+xfit <- seq(min(x)-5, max(x)+5, length = 400)
+yfit <- dnorm(xfit, mean = mean(x), sd = sd(x))
+lines(xfit, yfit, col = COL[4], lwd = 2)
+par(mar=c(3.7,3.7,1,1), las=1, mgp=c(2.5,0.7,0), mfrow = c(1,1), cex.lab = 1.5, cex.axis = 1.5)
+qqnorm(heights, col = COL[1], pch = 19, main = "", axes = FALSE)
+axis(1)
+axis(2)
+qqline(heights, col = COL[1])
+```
+
+```{r}
+# Use the DATA606::qqnormsim function
+DATA606::qqnormsim(heights)
+```
+
+> A Q-Q plot plots the quantiles of a sample distribution against a reference distribution [@ford2015].  If the plot is a straight line then we can assume they came from the same distribution.  Looking at the heights, it appear like a normal distribution fits the sample data.
+
+
+--------------------------------------------------------------------------------
+
+\clearpage
+
+### (Defect Rates)
+
+**Defective rate.** (4.14, p. 148) A machine that produces a special type of transistor (a component of computers) has a 2% defective rate. The production is considered a random process where each transistor is independent of the others.
+
+#### 13
+
+(a) What is the probability that the 10th transistor produced is the first with a defect?
+
+```{r}
+# Geometric Distribution - How many trials to observe a "success" (ie desired outcome)
+
+# Rule are met: each trial is independent and rate is equally distributed (ie consistent)
+p <- 0.02  # defect rate
+n <- 10    # trials
+
+(prob <- ((1 - p)^(n-1) * p))
+```
+
+#### 14
+
+(b) What is the probability that the machine produces no defective transistors in a batch of 100?
+
+```{r}
+# Simple probability
+p <- 0.02  # defect rate
+n <- 100    # trials
+
+(prob <- (1-p)^n)
+```
+
+#### 15
+
+(c) On average, how many transistors would you expect to be produced before the first with a defect? What is the standard deviation?
+
+```{r}
+# Geometric Distribution - How many trials to observe a "success" (ie desired outcome)
+p <- 0.02  # defect rate
+n <- 100    # trials
+
+(mu <- 1/p)              # mean represents the average # trials until the 2% defect rate occurs (on average)
+(sd <- sqrt((1-p)/p^2))  # standard deviation
+```
+
+#### 16
+
+(d) Another machine that also produces transistors has a 5% defective rate where each transistor
+is produced independent of the others. On average how many transistors would you expect to be produced with this machine before the first with a defect? What is the standard deviation?
+
+```{r}
+# Geometric Distribution - How many trials to observe a "success" (ie desired outcome)
+p <- 0.05  # defect rate
+n <- 100    # trials
+
+(mu <- 1/p)              # mean represents the average # trials until the 5% defect rate occurs (on average)
+(sd <- sqrt((1-p)/p^2))  # standard deviation
+
+```
+
+> Note with Geometric distributions, as the probability increase the time to wait (on average) decreases.
+
+#### 17
+
+(e) Based on your answers to parts (c) and (d), how does increasing the probability of an event affect the mean and standard deviation of the wait time until success?
+
+> As probability increases, the time to wait (mean) decreases - this makes sense.  If there is a higher error rate, it should happen more often.  
+
+> We see the standard deviation also decrease.  With a low error rate, there is a greater spread between events with equal probability of an error occuring (p is independent).  This leads to a very high SD indicating a very broad distribution.  As the error rate increases, the separation between events decreases and the conceptually, we have a narrower distribution with a much higer peak.  With this shape, we would expect the SD, a measure of spread, to decrease.    
+
+
+--------------------------------------------------------------------------------
+
+\clearpage
+
+### (Male Children)
+
+**Male children.** While it is often assumed that the probabilities of having a boy or a girl are the same, the actual probability of having a boy is slightly higher at 0.51. Suppose a couple plans to have 3 kids.
+
+#### 18 
+
+(a) Use the binomial model to calculate the probability that two of them will be boys.
+$$P(\text{obs } k\text{ in }n\text{ given }p) = \frac{n!}{k!(n-k)!}*p^k*(1-p)^{n-k}$$
+
+```{r}
+p_b <- 0.51
+p_g <- 1 - p_b
+n <- 3
+k <- 2
+
+(p_2boys <- factorial(3) * p_b^k * p_g^1 / (factorial(k)*factorial(n-k)))
+```
+
+#### 19
+
+(b) Write out all possible orderings of 3 children, 2 of whom are boys. Use these scenarios to calculate the same probability from part (a) but using the addition rule for disjoint outcomes. Confirm that your answers from parts (a) and (b) match.
+
+| Seq  | children | Probability  |
+|----|----------|---|
+| 1 | B B G    |  0.51 * 0.51 * 0.49 |
+| 2 | B G B    |  0.51 * 0.49 * 0.51 |
+| 3 | G B B    |  0.49 * 0.51 * 0.51 |
+
+
+$$P(\text{1}^{st}\text{ Seq or 2}^{nd}\text{ Seq or 3}^{rd}\text{ Seq})\\
+=P(\text{1}^{st}\text{ Seq})+P(\text{2}^{nd}\text{ Seq})+P(\text{3}^{rd}\text{ Seq})\\
+=3 * [0.51 * 0.51 * 0.49]\\
+= 0.3823\text{ or }38.23\%$$
+
+#### 20
+
+(c) If we wanted to calculate the probability that a couple who plans to have 8 kids will have 3 boys, briefly describe why the approach from part (b) would be more tedious than the approach from part (a).
+
+> Part (a) [Exercise 18] Has a simple formula that captures the combinatorial math making the calcuations far easier.  In Part (b) [Exercise 19] we'd have to write out all combinations, then multiply out the probabilities without introducing bugs and finally multiply the final combination component with the single event probability ... all of that is way too much work and hassle. It's good to understand how the formula was derived in case we have a complex problem requiring we deviate from  the formula.
+
+--------------------------------------------------------------------------------
+
+\clearpage
+
+#### (Volleyball)
+
+**Serving in volleyball.** (4.30, p. 162) A not-so-skilled volleyball player has a 15% chance of making the serve, which involves hitting the ball so it passes over the net on a trajectory such that it will land in the opposing team’s court. Suppose that her serves are independent of each other.
+
+#### 21
+
+(a) What is the probability that on the 10th try she will make her 3rd successful serve?
+
+```{r}
+# Negative Binomial - Probability of observing kth success on nth trial.
+# Rules: 1) trials must be in dependent, 2) all outcomes are success or fail
+#        3) P remains consistent between trials 4) last trial MUST be a success
+
+p <- 0.15
+n <- 10
+k <- 3
+
+(prob <- factorial(n-1) * p^k * (1-p)^(n-k) / (factorial(k-1)*factorial(n-k)))
+```
+
+#### 22
+
+(b) Suppose she has made two successful serves in nine attempts. What is the probability that her 10th serve will be successful?
+
+> Since we assume independence between trials, the probability of success on any single given serve is 15%.  So, on her 10th serve she has a 15% chance of success.  It doesn't matter what has come before.
+
+#### 23
+
+(c) Even though parts (a) and (b) discuss the same scenario, the probabilities you calculated should be different. Can you explain the reason for this discrepancy?
+
+> In Part (b), since we assume independence between trials, the probability of success on any single given serve is 15%.  So, on her 10th serve she has a 15% chance of success.  It doesn't matter what has come before.  
+
+> In Part (a), we were asking what is the probability of a sequence of events happening in a specific way/order.  Now we are having to account for 2 previous successful serves and the 15% probability of the 10th serve being successful.  
+
+## References
