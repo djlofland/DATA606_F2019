@@ -14,7 +14,7 @@ output:
     extra_dependencies: ["geometry", "multicol", "multirow", "xcolor"]
 ---
 
-Source files: [https://github.com/djlofland/DATA606_F2019/tree/master/Lab8](https://github.com/djlofland/DATA606_F2019/tree/master/Lab8)
+Source files: [https://github.com/djlofland/DATA606_F2019/tree/master/Homework8](https://github.com/djlofland/DATA606_F2019/tree/master/Homework8)
 
 ```{r setup, include=FALSE}
 knitr::opts_chunk$set(echo = TRUE)
