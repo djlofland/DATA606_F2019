@@ -62,12 +62,29 @@ axis(1, at = seq(-40, 40, 20))
 axis(2)
 ```
 
+### Exercise 1
+
 (a) Describe the relationship between number of calories and amount of carbohydrates (in grams) that Starbucks food menu items contain.
+
+> positive linear relationship, moderate correlation, residuals increase as calories increase (could be problematic), residuals are normal
+
+### Exercise 2
+
 (b) In this scenario, what are the explanatory and response variables?
+
+> Explanatory:**Calories**, Response: **Carbs**
+
+### Exercise 3
+
 (c) Why might we want to fit a regression line to these data?
+
+> to understand the relationship and predict other unknown foods
+
+### Exercise 4
+
 (d) Do these data meet the conditions required for fitting a least squares line?
 
-
+> Mostly ... the only concern is that residuals increase with calories count
 
 
 
@@ -75,7 +92,7 @@ axis(2)
 
 \clearpage
 
-**Body measurements, Part I.** (8.13, p. 316) Researchers studying anthropometry collected body girth measurements and skeletal diameter measurements, as well as age, weight, height and gender for 507 physically active individuals.19 The scatterplot below shows the relationship between height and shoulder girth (over deltoid muscles), both measured in centimeters.
+**Body measurements, Part I.** (8.13, p. 316) Researchers studying anthropometry collected body girth measurements and skeletal diameter measurements, as well as age, weight, height and gender for 507 physically active individuals. The scatterplot below shows the relationship between height and shoulder girth (over deltoid muscles), both measured in centimeters.
 
 \begin{center}
 ```{r, echo=FALSE, message=FALSE, warning=FALSE, fig.show="hold", out.width="50%", fig.height=4}
@@ -92,10 +109,17 @@ plot(bdims$wgt ~ bdims$hip.gi,
 ```
 \end{center}
 
-(a) Describe the relationship between shoulder girth and height. 190
-(b) How would the relationship change if shoulder girth was measured in inches while the units of height re- mained in centimeters?
+### Exercise 5
 
+(a) Describe the relationship between shoulder girth and height.
 
+> There is a   strong positive linear relationship, but it looks like we might have 2 segments (ie 2 lines) ... possibly gender is a segmenting factor
+
+### Exercise 6
+
+(b) How would the relationship change if shoulder girth was measured in inches while the units of height remained in centimeters?
+
+> Changing the units doesn't change the relationship.  It might change the slope, but not relationship between variables.
 
 
 --------------------------------------------------------------------------------
@@ -104,11 +128,28 @@ plot(bdims$wgt ~ bdims$hip.gi,
                                       
 **Body measurements, Part III.** (8.24, p. 326) Exercise above introduces data on shoulder girth and height of a group of individuals. The mean shoulder girth is 107.20 cm with a standard deviation of 10.37 cm. The mean height is 171.14 cm with a standard deviation of 9.41 cm. The correlation between height and shoulder girth is 0.67.
 
+### Exercise 7
+
 (a) Write the equation of the regression line for predicting height.
+
+### Exercise 8
+
 (b) Interpret the slope and the intercept in this context.
+
+### Exercise 9
+
 (c) Calculate $R^2$ of the regression line for predicting height from shoulder girth, and interpret it in the context of the application.
+
+### Exercise 10
+
 (d) A randomly selected student from your class has a shoulder girth of 100 cm. Predict the height of this student using the model.
+
+### Exercise 11
+
 (e) The student from part (d) is 160 cm tall. Calculate the residual, and explain what this residual means.
+
+### Exercise 12
+
 (f) A one year old has a shoulder girth of 56 cm. Would it be appropriate to use this linear model to predict the height of this child?
 
 
@@ -161,10 +202,24 @@ box()
 ```
 \end{center}
 
+### Exercise 13
+
 (a) Write out the linear model.
+
+### Exercise 14
+
 (b) Interpret the intercept.
+
+### Exercise 15
+
 (c) Interpret the slope.
+
+### Exercise 16
+
 (d) Interpret $R^2$.
+
+### Exercise 17
+
 (e) Calculate the correlation coefficient.
 
 
@@ -210,8 +265,17 @@ box()
 ```
 \end{center}
 
+### Exercise 18
+
 (a) Given that the average standardized beauty score is -0.0883 and average teaching evaluation score is 3.9983, calculate the slope. Alternatively, the slope may be computed using just the information provided in the model summary table.
+
+### Exercise 19
+
+
 (b) Do these data provide convincing evidence that the slope of the relationship between teaching evaluation and beauty is positive? Explain your reasoning.
+
+### Exercise 20
+
 (c) List the conditions required for linear regression and check if each one is satisfied for this model based on the following diagnostic plots.
 
 ```{r, echo=FALSE, message=FALSE, warning=FALSE, fig.show="hold", out.width="50%", fig.height=4}
