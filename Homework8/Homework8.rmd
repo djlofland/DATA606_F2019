@@ -131,28 +131,53 @@ plot(bdims$wgt ~ bdims$hip.gi,
 ### Exercise 7
 
 (a) Write the equation of the regression line for predicting height.
+```{r}
+R <- 0.67
+sd_y <- 9.41
+sd_x <- 10.37
+b1 <- R * sd_y / sd_x
+x <- 107.20
+y <- 171.14
+b0 <- y - b1 * x
+```
+
+> $$\hat{height} = `r b0` + `r b1` * girth$$
 
 ### Exercise 8
 
 (b) Interpret the slope and the intercept in this context.
 
+> Slope: for each 1 cm increase in girth we expect 0.608 cm increase in height.  
+
+> Intercept: Theoretically if girth was 0, we'd have a base height of 106cm.  This is meaningless - our data points would stop well short of a shoulder girth  of 0.  
+
 ### Exercise 9
 
 (c) Calculate $R^2$ of the regression line for predicting height from shoulder girth, and interpret it in the context of the application.
+
+> R$^2$ = `r 0.67^2` - means that this percent of variablility in height is explained by girth.
 
 ### Exercise 10
 
 (d) A randomly selected student from your class has a shoulder girth of 100 cm. Predict the height of this student using the model.
 
+```{r}
+height <- b0 + 100 * b1
+```
+
+> `r height` cm
+
 ### Exercise 11
 
 (e) The student from part (d) is 160 cm tall. Calculate the residual, and explain what this residual means.
+
+> Residual: `r 160 - height`; this means that we overestimated the height with the model and the student is actuall a little shorter than expected.
 
 ### Exercise 12
 
 (f) A one year old has a shoulder girth of 56 cm. Would it be appropriate to use this linear model to predict the height of this child?
 
-
+> No - that would be extrapolating beyond the bounds of our dataset.
 
 
 
