@@ -26,6 +26,27 @@ library(corrr)
 library(Hmisc)
 library(corrplot)
 library(glmnet)
+library(choroplethr)
+library(maps)
+
+
+#' Print a side-by-side Histogram and QQPlot of Residuals
+#'
+#' @param model A model
+#' @examples
+#' residPlot(myModel)
+#' @return null
+#' @export
+residPlot <- function(model) {
+  par(mfrow = c(1, 2))
+  hist(model[["residuals"]], freq = FALSE, breaks = "fd", main = "Residual Histogram",
+       xlab = "Residuals",col="lightgreen")
+  lines(density(model[["residuals"]], kernel = "ep"),col="blue", lwd=3)
+  curve(dnorm(x,mean=mean(model[["residuals"]]), sd=sd(model[["residuals"]])), col="red", lwd=3, lty="dotted", add=T)
+  qqnorm(model[["residuals"]], main = "Residual Q-Q plot")
+  qqline(model[["residuals"]],col="red", lwd=3, lty="dotted")
+  par(mfrow = c(1, 1))
+}
 ```
 
 
@@ -763,6 +784,49 @@ ggplot(data=data, aes(x=MMR, color=Year)) +
   theme(plot.title = element_text(hjust = 0.5))
 ```
 
+```{r mmr_change_maps, , message = FALSE}
+
+data <- mmr_df %>% 
+  select(Country, MMR, Year) %>%
+  rename(region = Country,
+         value = MMR) %>%
+  mutate(region = tolower(region)) %>%
+  mutate(region = recode(region,
+                          "united states"    = "united states of america",
+                          "congo, dem. rep." = "democratic republic of the congo",
+                          "congo, rep."      = "republic of congo",
+                          "korea, dem. rep." = "south korea",
+                          "korea. rep."      = "north korea",
+                          "tanzania"         = "united republic of tanzania",
+                          "serbia"           = "republic of serbia",
+                          "slovak republic"  = "slovakia",
+                          "yemen, rep."      = "yemen"))
+
+country_choropleth(data %>% filter(Year == 2000), num_colors = 9) +
+  scale_fill_brewer(palette="YlOrRd") +
+  labs(title = paste("MMR by country (", 2000, ")"), fill = "value") + 
+  theme(plot.title = element_text(size = 20, face = "bold", hjust = 0.5))
+
+country_choropleth(data %>% filter(Year == 2005), num_colors = 9) +
+  scale_fill_brewer(palette="YlOrRd") +
+  labs(title = paste("MMR by country (", 2005, ")"), fill = "value") + 
+  theme(plot.title = element_text(size = 20, face = "bold", hjust = 0.5))
+
+country_choropleth(data %>% filter(Year == 2010), num_colors = 9) +
+  scale_fill_brewer(palette="YlOrRd") +
+  labs(title = paste("MMR by country (", 2010, ")"), fill = "value") + 
+  theme(plot.title = element_text(size = 20, face = "bold", hjust = 0.5))
+
+country_choropleth(data %>% filter(Year == 2015), num_colors = 9) +
+  scale_fill_brewer(palette="YlOrRd") +
+  labs(title = paste("MMR by country (", 2015, ")"), fill = "value") + 
+  theme(plot.title = element_text(size = 20, face = "bold", hjust = 0.5))
+
+#data$Year <- as.factor(data$Year)
+
+
+```
+
 
 #### Changes in Mortality by Country
 
@@ -806,6 +870,56 @@ ggplot(tbl %>% top_n(-10, delta), aes(x=reorder(Country, delta), y=delta, fill=C
   ylab('Deaths') +
   theme(legend.position = "none") +
   coord_flip()
+```
+
+```{r mmr_delta_inc_map, message = FALSE}
+data <- tbl %>% 
+  filter(delta > 0) %>%
+  rename(region = Country,
+         value = delta) %>%
+  mutate(region = tolower(region), 
+         value = value) %>%
+  mutate(region = recode(region,
+                          "united states"    = "united states of america",
+                          "congo, dem. rep." = "democratic republic of the congo",
+                          "congo, rep."      = "republic of congo",
+                          "korea, dem. rep." = "south korea",
+                          "korea. rep."      = "north korea",
+                          "tanzania"         = "united republic of tanzania",
+                          "serbia"           = "republic of serbia",
+                          "slovak republic"  = "slovakia",
+                          "yemen, rep."      = "yemen"))
+
+country_choropleth(data, num_colors = 9) +
+  scale_fill_brewer(palette="Greens") +
+  labs(title = paste("MMR Improvements (2000-2015)"), fill = "value") + 
+  theme(plot.title = element_text(size = 20, face = "bold", hjust = 0.5))
+
+```
+
+```{r mmr_delta_dec_map, message = FALSE}
+data <- tbl %>% 
+  filter(delta < 0) %>%
+  rename(region = Country,
+         value = delta) %>%
+  mutate(region = tolower(region), 
+         value = -value) %>%
+  mutate(region = recode(region,
+                          "united states"    = "united states of america",
+                          "congo, dem. rep." = "democratic republic of the congo",
+                          "congo, rep."      = "republic of congo",
+                          "korea, dem. rep." = "south korea",
+                          "korea. rep."      = "north korea",
+                          "tanzania"         = "united republic of tanzania",
+                          "serbia"           = "republic of serbia",
+                          "slovak republic"  = "slovakia",
+                          "yemen, rep."      = "yemen"))
+
+country_choropleth(data, num_colors = 9) +
+  scale_fill_brewer(palette="Reds") +
+  labs(title = paste("MMR Losses (2000-2015)"), fill = "value") + 
+  theme(plot.title = element_text(size = 20, face = "bold", hjust = 0.5))
+
 ```
 
 ```{r calc_delta}
@@ -928,26 +1042,6 @@ ggplot(mmr_df %>% drop_na(), aes(SAB_Pct, Deaths)) +
 
 Let's build a model with the known features that helps to explain MMR and explore which features might have more influence on outcomes.  This type of analysis would be useful for policy makers to design followup experiments that attempt to reduce MMR.I'll start by exploring each feature separately, then combine and do multiple regression.
 
-```{r}
-
-#' Print a side-by-side Histogram and QQPlot of Residuals
-#'
-#' @param model A model
-#' @examples
-#' residPlot(myModel)
-#' @return null
-#' @export
-residPlot <- function(model) {
-  par(mfrow = c(1, 2))
-  hist(model[[3]], freq = FALSE, breaks = "fd", main = "Residual Histogram",
-       xlab = "Residuals")
-  lines(density(model[[3]], kernel = "ep"))
-  qqnorm(model[[3]], main = "Residual Q-Q plot")
-  qqline(model[[3]])
-  par(mfrow = c(1, 1))
-}
-```
-
 #### Population Model
 
 Population is highly skewed which isn't ideal for regression analysis - we log transform *Population* and run a simple linear regression to assess how much *Population* influences MMR and whether the effect is significant.  Interestingly, *Population* is a significant factor and as *Population* increases, *MMR* increases.  However, with an adjusted R$^2$ of 0.008236, *Population* explains less than 1% of the variability in the model and the residuals and Q-Q plot suggest that a linear model with *Population* probably isn't appropriate.  Given this, we won't consider *Population* in our multiple regression model.
@@ -1039,6 +1133,39 @@ combined_lm <- lm(MMR ~ SAB_Pct + log(CHE), data = mmr_df)
 
 residPlot(combined_lm)
 ```
+
+#### GAM
+
+As an exploratory effort, let's try fitting a Generalized Additive Model to 
+
+```{r}
+library(mgcv)
+
+# Build the model
+model <- gam(MMR ~ s(SAB_Pct) + s(log(CHE)), data = mmr_df)
+
+summary(model)
+
+ggplot(mmr_df, aes(SAB_Pct, MMR) ) +
+  geom_point() +
+  stat_smooth(method = gam, formula = y ~ s(x))
+
+ggplot(mmr_df, aes(log(CHE), MMR) ) +
+  geom_point() +
+  stat_smooth(method = gam, formula = y ~ s(x))
+
+ggplot(mmr_df, aes(log(CHE), SAB_Pct) ) +
+  geom_point() +
+  stat_smooth(method = gam, formula = y ~ s(x))
+# Make predictions
+#predictions <- model %>% predict(test.data)
+# Model performance
+#data.frame(
+#  RMSE = RMSE(predictions, test.data$medv),
+#  R2 = R2(predictions, test.data$medv)
+#)
+```
+
 
 ### Part 5 - Conclusion
 
